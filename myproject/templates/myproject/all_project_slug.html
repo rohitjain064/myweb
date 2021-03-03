@@ -1,0 +1,29 @@
+{% extends 'main.html' %}
+{% load static %}
+
+{% block title %} {{ ep.title }}{% endblock %}
+<style type="text/css">
+    img{
+    max-width: 100% ;
+        max-height: 75%;
+    object-fit: cover ;
+
+    }
+</style>
+
+{% block content %}
+
+
+    <div class="main-container">
+    <h1>{{ ep.title }}</h1>
+        <small>{{ ep.timestamp }}</small>
+{#        <h4>{{ explore_project.subheadline }}</h4>#}
+    <img class="thumbnail" src="{{ ep.thumbnail.url }}">
+    <p>
+    {{ ep.body|safe }}
+    </p>
+    </div>
+
+
+
+{% endblock %}

@@ -1,0 +1,179 @@
+{% extends 'main.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %} Sort by {{ type.name }} {% endblock %}
+
+
+{% block content %}
+
+    <style type="text/css">
+    #id_tags{
+        overflow: scroll;
+        max-height:100px ;
+        {#border:1px solid #888;#}
+        border-radius: 5px ;
+        padding: 5px;
+    }
+
+    </style>
+<br>
+    <hr>
+
+   <center>
+   <h3>All Project Of:</h3><h1>{{ type.name }}</h1>
+
+   </center>
+    <hr>
+    <br>
+    <br>
+
+ <div class="col-lg-6 offset-lg-3 py-5 border text-xs-center pagination-centered">
+<div class="row">
+
+	{% if pro.has_other_pages %}
+  <ul class="pagination">
+    {% if pro.has_previous %}
+       &nbsp; <li class="page-item"><a href="?page={{ pro.previous_page_number }}">&laquo;</a></li> &nbsp;
+    {% else %}
+       &nbsp; <li class="page-item disabled"><span>&laquo;</span></li> &nbsp;
+    {% endif %}
+    {% for i in pro.paginator.page_range %}
+      {% if pro.number == i %}
+         &nbsp; <li class="page-item active"><a class="">{{ i }} <a class="page-link sr-only">(current)</a></a></li> &nbsp;
+      {% else %}
+        &nbsp;  <li class="page-item"><a class="" href="?page={{ i }}">{{ i }}</a></li> &nbsp;
+      {% endif %}
+    {% endfor %}
+    {% if pro.has_next %}
+       &nbsp; <li class="page-item"><a class="" href="?page={{ pro.next_page_number }}">&raquo;</a></li> &nbsp;
+    {% else %}
+      &nbsp;  <li class="page-item disabled"><a class="">&raquo;</a></li>
+    {% endif %}
+  </ul>
+{% endif %}
+	</div>
+</div>
+
+
+    <div class="main-container">
+
+
+{% for ep in explore_project %}
+<div>
+    <center>
+        <div class="post">
+      <img style="height: 500px; width: 500px" id="thumbnail" src="{{ ep.thumbnail.url }}">
+    <div class="post-preview">
+        <h6 class="post-title">{{ ep.title }}</h6>
+{#        <p class="post-intro">{{ post.subheadline }}</p>#}
+        <a href="{% url 'project_by_slug' ep.id %}">Read More</a>
+        <hr>
+    {% if request.user.is_authenticated %}
+        |  <a href="{% url 'update_explore' ep.id %}">Update</a>
+       | <a href="{% url 'delete_explore' ep.id %}">Delete</a>
+    {% endif %}
+
+        {% for tag in ep.type.all %}
+            <span class="tag">
+            {{ tag }}
+
+            </span>
+
+            {% endfor %}
+
+    </div>
+</div>
+    <br>
+    <br>
+    </center>
+
+</div>
+    {% empty %}
+    <h3>No Post Found</h3>
+     {% endfor %}
+    </div>
+
+
+
+  <div class="row" style="text-align: center">
+
+		{% if posts.has_other_pages %}
+
+			<ul class="pagination">
+
+				{% if posts.has_previous %}
+					<li class="page-item"><a data-page="{{posts.previous_page_number}}" href="?page={{posts.previous_page_number}}" class="page-link">&laquo</a></li>
+
+					<li class="page-item"><a data-page="1" href="?page=1" class="page-link">First</a></li>
+				{% endif %}
+
+
+				{% for i in posts.paginator.page_range %}
+					{% if posts.number == i %}
+						<li class="page-item"><a class="active page-link">{{i}}</a></li>
+					{% else %}
+						<li class="page-item"><a data-page="{{i}}" href="?page={{i}}" class="page-link">{{i}}</a></li>
+					{% endif %}
+
+				{% endfor %}
+
+
+				{% if posts.has_next %}
+					<li class="page-item"><a data-page="{{posts.paginator.num_pages}}" href="?page={{posts.paginator.num_pages}}" class="page-link">Last</a></li>
+
+					<li class="page-item"><a data-page="{{posts.next_page_number}}" href="?page={{posts.next_page_number}}" class="page-link">&raquo</a></li>
+				{% endif %}
+			</ul>
+
+		{% endif %}
+	</div>
+
+
+     <div class="col-lg-6 offset-lg-3 py-5 border text-xs-center pagination-centered">
+<div class="row">
+
+	{% if pro.has_other_pages %}
+  <ul class="pagination">
+    {% if pro.has_previous %}
+       &nbsp; <li class="page-item"><a href="?page={{ pro.previous_page_number }}">&laquo;</a></li> &nbsp;
+    {% else %}
+       &nbsp; <li class="page-item disabled"><span>&laquo;</span></li> &nbsp;
+    {% endif %}
+    {% for i in pro.paginator.page_range %}
+      {% if pro.number == i %}
+         &nbsp; <li class="page-item active"><a class="">{{ i }} <a class="page-link sr-only">(current)</a></a></li> &nbsp;
+      {% else %}
+        &nbsp;  <li class="page-item"><a class="" href="?page={{ i }}">{{ i }}</a></li> &nbsp;
+      {% endif %}
+    {% endfor %}
+    {% if pro.has_next %}
+       &nbsp; <li class="page-item"><a class="" href="?page={{ pro.next_page_number }}">&raquo;</a></li> &nbsp;
+    {% else %}
+      &nbsp;  <li class="page-item disabled"><a class="">&raquo;</a></li>
+    {% endif %}
+  </ul>
+{% endif %}
+	</div>
+</div>
+
+
+<script type="text/javascript">
+	let searchForm = document.getElementById('searchForm')
+	let pageLinks = document.getElementsByClassName('page-link')
+
+	for(var i=0; pageLinks.length > i; i++){
+
+		pageLinks[i].addEventListener('click', function(e){
+			e.preventDefault()
+			let page = this.dataset.page
+			console.log('Page:', page)
+			searchForm.innerHTML += `<input value="${page}" name="page" hidden >`
+			searchForm.submit()
+		})
+
+	}
+</script>
+
+
+{% endblock %}

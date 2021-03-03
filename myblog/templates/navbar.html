@@ -1,0 +1,36 @@
+    <div class="nav-wrapper">
+              <a href="{% url 'home' %}">
+                   <div class="dots-wrapper">
+                   <div data id="dot-1" class="browser-dot"></div>
+                   <div id="dot=2" class="browser-dot"></div>
+                   <div id="dot-3" class="browser-dot"></div>
+
+               </div>
+              </a>
+
+                <ul id="navigation">
+
+                 <li><a href="{% url 'home' %}">Home</a></li>|
+                    <li><a href="/#contact">Contact</a></li>|
+                    <li><a href="{% url 'posts' %}">Blog </a></li>|
+                <li><a href="{% url 'all_project' %}">Explore Project </a></li>
+               <li>
+               </li>
+                     <li>
+                           <form  method='get' action="{% url 'search' %}" class="form-inline my-2 my-lg-0 mx-3">
+      {% csrf_token %}
+        <input name="search" id="search" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+      <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
+
+    </form>
+                    </li>
+
+
+
+{#                    {% if request.user.is_authenticated %}#}
+{#                     <li><a href="{% url 'create_post' %}">Create Post</a></li>|#}
+{#                         <li><a href="{% url 'create_explore' %}">Create Explore Project</a></li>#}
+{##}
+{#                    {% endif %}#}
+                </ul>
+            </div>

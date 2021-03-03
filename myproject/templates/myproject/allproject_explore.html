@@ -1,0 +1,186 @@
+
+{% extends 'main.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %} All Project{% endblock %}
+
+
+{% block content %}
+
+    <style type="text/css">
+    #id_tags{
+        overflow: scroll;
+        max-height:100px ;
+        {#border:1px solid #888;#}
+        border-radius: 5px ;
+        padding: 5px;
+    }
+
+    </style>
+
+
+   <center>
+    <h1>All My Projects</h1>
+   </center>
+
+ <center>
+    <form method="get" action="">
+    {% csrf_token %}
+
+        {{ myFilter.form|crispy }}
+
+    <input class="btn btn-primary" type="submit" value="Search">
+
+    </form>
+ <br>
+ <hr>
+ <br>
+
+ </center>
+
+    <center>
+    <div class="">
+    <h5>    Sort Website By:
+</h5>
+      {% for ty in type%}
+            <a href="{% url 'type' ty.id %}">
+                <span class="tag">
+                 <h4>  | {{ ty}} |&nbsp;</h4>
+                </span>
+            </a>
+
+    {% endfor %}
+
+    </div>
+    </center>
+    <br>
+    <hr>
+    <br>
+    <center>
+ <div class="col-lg-6 offset-lg-3 py-5 border text-xs-center pagination-centered">
+<div class="row">
+
+	{% if projects.has_other_pages %}
+  <ul class="pagination">
+    {% if projects.has_previous %}
+       &nbsp; <li class="page-item"><a href="?page={{ projects.previous_page_number }}">&laquo;</a></li> &nbsp;
+    {% else %}
+       &nbsp; <li class="page-item disabled"><span>&laquo;</span></li> &nbsp;
+    {% endif %}
+    {% for i in projects.paginator.page_range %}
+      {% if projects.number == i %}
+         &nbsp; <li class="page-item active"><a class="">{{ i }} <a class="page-link sr-only">(current)</a></a></li> &nbsp;
+      {% else %}
+        &nbsp;  <li class="page-item"><a class="" href="?page={{ i }}">{{ i }}</a></li> &nbsp;
+      {% endif %}
+    {% endfor %}
+    {% if projects.has_next %}
+       &nbsp; <li class="page-item"><a class="" href="?page={{ projects.next_page_number }}">&raquo;</a></li> &nbsp;
+    {% else %}
+      &nbsp;  <li class="page-item disabled"><a class="">&raquo;</a></li>
+    {% endif %}
+  </ul>
+{% endif %}
+	</div>
+</div>
+
+</center>
+    <div class="main-container">
+
+
+{% for pro in projects %}
+<div>
+<center>
+    <div class="post">
+      <img style="height: 500px; width: 500px" id="thumbnail" src="{{ pro.thumbnail.url }}">
+
+        <div class="post-preview">
+       <center> <h6 class="post-title">{{ pro.title }}</h6>
+
+        <small>{{ pro.timestamp }}</small>
+       </center>
+
+{#        <p class="post-intro">{{ pro.subheadline }}</p>#}
+        <a href="{% url 'project_by_slug' pro.id %}">Read More</a>
+        <hr>
+    {% if request.user.is_authenticated %}
+        |  <a href="{% url 'update_explore' pro.id %}">Update</a>
+       | <a href="{% url 'delete_explore' pro.id %}">Delete</a>
+    {% endif %}
+
+        {% for ty in pro.type.all %}
+            <span class="tag">
+            <a href="{% url 'type' ty.id %}">
+                <span class="tag">
+                    {{ ty }}
+
+                </span>
+            </a>
+
+            </span>
+<br>
+            <br>
+            {% endfor %}
+
+
+    </div>
+</div>
+<br>
+<br>
+</center>
+</div>
+    {% empty %}
+    <h3>No Project Found</h3>
+     {% endfor %}
+    </div>
+
+
+<center>
+  <div class="col-lg-6 offset-lg-3 py-5 border text-xs-center pagination-centered">
+<div class="row">
+
+	{% if projects.has_other_pages %}
+  <ul class="pagination">
+    {% if projects.has_previous %}
+       &nbsp; <li class="page-item"><a href="?page={{ projects.previous_page_number }}">&laquo;</a></li> &nbsp;
+    {% else %}
+       &nbsp; <li class="page-item disabled"><span>&laquo;</span></li> &nbsp;
+    {% endif %}
+    {% for i in projects.paginator.page_range %}
+      {% if projects.number == i %}
+         &nbsp; <li class="page-item active"><a class="">{{ i }} <a class="page-link sr-only">(current)</a></a></li> &nbsp;
+      {% else %}
+        &nbsp;  <li class="page-item"><a class="" href="?page={{ i }}">{{ i }}</a></li> &nbsp;
+      {% endif %}
+    {% endfor %}
+    {% if projects.has_next %}
+       &nbsp; <li class="page-item"><a class="" href="?page={{ projects.next_page_number }}">&raquo;</a></li> &nbsp;
+    {% else %}
+      &nbsp;  <li class="page-item disabled"><a class="">&raquo;</a></li>
+    {% endif %}
+  </ul>
+{% endif %}
+	</div>
+</div>
+
+
+</center>
+<script type="text/javascript">
+	let searchForm = document.getElementById('searchForm')
+	let pageLinks = document.getElementsByClassName('page-link')
+
+	for(var i=0; pageLinks.length > i; i++){
+
+		pageLinks[i].addEventListener('click', function(e){
+			e.preventDefault()
+			let page = this.dataset.page
+			console.log('Page:', page)
+			searchForm.innerHTML += `<input value="${page}" name="page" hidden >`
+			searchForm.submit()
+		})
+
+	}
+</script>
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %} Delete {{ item.title }} {% endblock %}
+
+
+{% block content %}
+ <center>
+<h1>Delete {{ item }}</h1>
+     <br>
+     <br>
+
+
+    <form method="post" action="">
+{% csrf_token %}
+    <p>Are you sure want to delete {{ item }}</p>
+<input class="btn btn-danger" type="submit" value="Confirm">
+</form>
+     <a class="btn btn-info" href="{% url 'posts' %}">Back</a>
+ <br>
+ <br>
+    </center>
+
+
+{% endblock %}
